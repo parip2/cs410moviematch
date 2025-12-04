@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MovieMatch</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+      padding: 40px;
+    }
+
+    .container {
+      width: 600px;
+      margin: auto;
+      text-align: center;
+    }
+
+    input {
+      width: 80%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border-radius: 8px;
+      background: #e50914;
+      border: none;
+      color: white;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .movie-card {
+      background: #222;
+      padding: 20px;
+      border-radius: 15px;
+      margin-top: 20px;
+      text-align: left;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+    }
+
+    .movie-title {
+      font-size: 20px;
+      margin-bottom: 5px;
+      color: #e50914;
+      font-weight: bold;
+    }
+
+    .movie-desc {
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    .rating {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #f5c518;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>MovieMatch</h1>
+    <input id="queryBox" type="text" placeholder="Search for love, crime, adventure...">
+    <br>
+    <button onclick="searchMovies()">Search</button>
+
+    <div id="results"></div>
+  </div>
+
+  <script>
+    function searchMovies() {
+      let query = document.getElementById("queryBox").value;
+      
+      // TODO: Call your backend search API
+      fetch(`/search?q=${query}`)
+        .then(res => res.json())
+        .then(data => {
+          const resultsDiv = document.getElementById("results");
+          resultsDiv.innerHTML = "";
+
+          data.forEach(movie => {
+            resultsDiv.innerHTML += `
+              <div class="movie-card">
+                <div class="movie-title">${movie.title}</div>
+                <div class="rating">Rating: ${movie.rating}</div>
+                <div class="movie-desc">${movie.description}</div>
+              </div>
+            `;
+          });
+        });
+    }
+  </script>
+</body>
+</html>
