@@ -9,7 +9,11 @@ ratings = df_revised["rating"].tolist()
 descriptions = df_revised["description"].tolist()
 
 tr = TFIDFSearch(dataset)
+tr.compute_IDF()
 
+'''
+    Search endpoint to execute tf-idf ranking pipeline and return top 10 ranked movie results
+'''
 @app.route("/search")
 def search():
     q = request.args.get("q", "").lower().split()
@@ -34,4 +38,3 @@ def home():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
