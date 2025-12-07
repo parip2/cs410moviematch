@@ -29,7 +29,7 @@ class TFIDFSearch:
         tokens = row["tokenized_description"]
         if isinstance(tokens, list):
             freq.update(tokens)
-    self.vocab = np.array([word for word, _ in freq.most_common(200)])
+    self.vocab = np.array([word for word, _ in freq.most_common(3000)])
     print(f"Vocabulary built: {len(self.vocab)} words")
 
 
