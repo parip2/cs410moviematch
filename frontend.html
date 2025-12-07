@@ -35,6 +35,12 @@
       margin-top: 10px;
     }
 
+    button:disabled {
+      background: #666;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
     .movie-card {
       background: #222;
       padding: 20px;
@@ -61,6 +67,59 @@
       font-size: 14px;
       color: #f5c518;
     }
+
+    .no-results {
+      background: #222;
+      padding: 20px;
+      border-radius: 15px;
+      margin-top: 20px;
+      color: #f5c518;
+      font-size: 16px;
+      text-align: center;
+      border: 2px solid #e50914;
+    }
+
+    .error {
+      background: #222;
+      padding: 20px;
+      border-radius: 15px;
+      margin-top: 20px;
+      color: #ff6b6b;
+      font-size: 16px;
+      text-align: center;
+      border: 2px solid #ff6b6b;
+    }
+
+   
+    .loading-container {
+      display: none;
+      margin-top: 30px;
+    }
+
+    .loading-container.active {
+      display: block;
+    }
+
+    .spinner {
+      border: 4px solid #333;
+      border-top: 4px solid #e50914;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    .loading-text {
+      margin-top: 15px;
+      color: #ccc;
+      font-size: 14px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -68,22 +127,67 @@
     <h1>MovieMatch</h1>
     <input id="queryBox" type="text" placeholder="Search for love, crime, adventure...">
     <br>
-    <button onclick="searchMovies()">Search</button>
+    <button id="searchBtn" onclick="searchMovies()" disabled>Search</button>
+
+   
+    <div id="loading" class="loading-container">
+      <div class="spinner"></div>
+      <div class="loading-text">Searching for movies...</div>
+    </div>
 
     <div id="results"></div>
   </div>
 
   <script>
+    const queryBox = document.getElementById("queryBox");
+    const searchBtn = document.getElementById("searchBtn");
+    const loadingDiv = document.getElementById("loading");
+    const resultsDiv = document.getElementById("results");
+
+    
+    queryBox.addEventListener("input", function() {
+      searchBtn.disabled = this.value.trim() === "";
+    });
+
+    
+    queryBox.addEventListener("keypress", function(e) {
+      if (e.key === "Enter" && this.value.trim() !== "") {
+        searchMovies();
+      }
+    });
+
     function searchMovies() {
-      let query = document.getElementById("queryBox").value;
+      let query = queryBox.value.trim();
       
-      // TODO: Call your backend search API
-      fetch(`/search?q=${query}`)
+      if (!query) return;
+
+     
+      loadingDiv.classList.add("active");
+      resultsDiv.innerHTML = "";
+      searchBtn.disabled = true;
+
+      fetch(`/search?q=${encodeURIComponent(query)}`)
         .then(res => res.json())
         .then(data => {
-          const resultsDiv = document.getElementById("results");
-          resultsDiv.innerHTML = "";
+          
+          loadingDiv.classList.remove("active");
+          
+     
+          searchBtn.disabled = queryBox.value.trim() === "";
 
+    
+          if (data.message) {
+            resultsDiv.innerHTML = `<div class="no-results">${data.message}</div>`;
+            return;
+          }
+
+          
+          if (data.error) {
+            resultsDiv.innerHTML = `<div class="error">${data.error}</div>`;
+            return;
+          }
+
+  
           data.forEach(movie => {
             resultsDiv.innerHTML += `
               <div class="movie-card">
@@ -93,6 +197,14 @@
               </div>
             `;
           });
+        })
+        .catch(error => {
+
+          loadingDiv.classList.remove("active");
+          searchBtn.disabled = queryBox.value.trim() === "";
+
+          resultsDiv.innerHTML = `<div class="error">An error occurred. Please try again.</div>`;
+          console.error("Error:", error);
         });
     }
   </script>
