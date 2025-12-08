@@ -25,6 +25,7 @@ Run:
 
 ```bash
 pip install flask pandas numpy nltk
+```
 
 ### 2. Prepare the dataset
 
@@ -34,10 +35,10 @@ Run:
 python dataset_preprocessing_script.py
 
 This will produce: netflix_cleaned.csv
+```
 
 
----
-
-## Run the Backend
+## 3. Run the Application
 ```bash
 python app.py
+```
