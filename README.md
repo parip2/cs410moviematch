@@ -16,29 +16,5 @@ Built with **Python + Flask** and a simple **HTML/JS frontend**.
 
 
 ---
-
-## 🛠 Installation & Setup
-
-### 1. Install Dependencies
-
-Run:
-
-```bash
-pip install flask pandas numpy nltk
-```
-
-### 2. Prepare the dataset
-
-Run:
-
-```bash
-python dataset_preprocessing_script.py
-
-This will produce: netflix_cleaned.csv
-```
-
-
-## 3. Run the Application
-```bash
-python app.py
-```
+## Running the Application
+Run bash run_pipeline.sh in the Git Bash terminal.
