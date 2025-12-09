@@ -1,10 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "=============================="
 echo " Movie Match Setup"
-echo "=============================="
-echo ""
 
 # Detect python command
 if command -v python3 >/dev/null 2>&1; then
@@ -38,6 +35,11 @@ echo "[2/2] Installing dependencies..."
 pip install --upgrade pip
 pip install -r requirements.txt
 echo "Dependencies installed."
+echo ""
+
+echo "[3/3] Generating cleaned CSV..."
+$PY dataset_preprocessing_script.py
+echo "CSV generation done."
 echo ""
 
 echo "Starting application..."
